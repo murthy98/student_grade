@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<header>
+	<meta charset="utf-8">
+
+	<title>BVCEC</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="{{ url_for('static', filename='css/bootstrap-dropdownhover.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+		<link href="{{ url_for('static', filename='bvcicon.ico') }}" type="icon" rel="icon"  >
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+		
+		<div><br></div>
+	<div >
+		<h3 align='center' , ><strong>BVC ENGINEERING COLLEGE</strong></h3>
+		<h6 align='center'><strong>AUTONOMOUS</strong></h6>
+		<h6 align='center'>Approved by AICTE, Permanently Affiliated to JNTU Kakinada, Accredited by NAAC with 'A' Grade</h6>
+		<a href="/"><img style="max-width:100px; margin-top: -130px;" src="{{ url_for('static', filename='logo1.png') }}"></a>
+		
+	</div>
+	<nav class="navbar navbar-expand bg-dark">
+			<a class="navbar-brand" href="#" style="margin-left:200px"></a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			  <span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavDropdown" >
+			  <ul class="navbar-nav">
+				<li class="nav-item active"   >
+				 <a class="nav-link" style="color: #000000; background-color:#ffffff;border-radius: 20px;"href="/">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspHome&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <span class="sr-only">(current)</span></a>
+			
+				</li>
+				<li class="nav-item"   >
+				  <a class="nav-link" style="color: #000000; background-color:#ffffff;border-radius: 20px;margin-left:20px" href="/resonance">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspResonance&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</a>
+				</li>
+				<li class="nav-item"   >
+				  <a class="nav-link"style="color: #000000; background-color:#ffffff;border-radius: 20px;margin-left:20px"  href="/kreeda">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspKreeda&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</a>
+				</li>
+				<li class="nav-item"   >
+						<a class="nav-link"style="color: #000000; background-color:#ffffff;border-radius: 20px;margin-left:20px"href="/contact">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspContact&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</a>
+					  </li>
+			  </ul>
+			</div>
+			</nav>
+
+			</header>
+<body >
+ 
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+		<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<!------ Include the above in your HEAD tag ---------->
+		<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
+  <div class="container" style="min-height:100% ;width:80%">
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					{% for message in messages %}
+					<div class="alert alert-success alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+					{{message}}
+					</div>
+				{% endfor %}
+				{% endif %}
+			{% endwith %}
+			
+			{% block body %}{% endblock %}
+			<br>
+			<br>
+			</div>
+			
+</body>
+<footer class="section footer-classic context-light bg-image" style="background: #2d3246;color: white">
+  <br>  
+  <div class="container">
+      <div class="row row-30">
+        <div class="col-md-4 col-xl-5">
+          <div class="pr-xl-4"><a class="brand" href="#"></a>
+           
+            <p class="rights"><span>©  </span><span class="copyright-year">2019</span><span> </span><span>BVC Group</span><span>. </span><span>All Rights Reserved.</span></p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h5>Developed By</h5>
+          <p>G Murthy ,  R Uday<br>III-B.Tech CSE (2016-20)</p>
+         
+        </div>
+        
+      </div>
+    </div>
+    
+  </footer>
+</html>
+
