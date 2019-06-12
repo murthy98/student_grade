@@ -18,7 +18,10 @@
 		<h6 align='center'><strong>AUTONOMOUS</strong></h6>
 		<h6 align='center'>Approved by AICTE, Permanently Affiliated to JNTU Kakinada, Accredited by NAAC with 'A' Grade</h6>
 		<a href="/"><img style="max-width:100px; margin-top: -130px;" src="{{ url_for('static', filename='logo1.png') }}"></a>
-		
+		{% if session.logged_in %}
+
+		<button type="button" class="btn btn-success" style="margin-left:900px;margin-top:-200px"><a href="/logout" style="color:white">Logout</a></button>
+		{% endif %} 
 	</div>
 	<nav class="navbar navbar-expand bg-dark">
 			<a class="navbar-brand" href="#" style="margin-left:200px"></a>
@@ -26,6 +29,8 @@
 			  <span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNavDropdown" >
+					{%if session.logged_in%}
+
 			  <ul class="navbar-nav">
 				<li class="nav-item active"   >
 <!-- Button trigger modal -->
@@ -79,9 +84,15 @@
 														  <input type="text" class="form-control" id="acyear" placeholder="Enter Academic year like 2016-20.." required>
 														</div>
 													  </div>
+													  <br>
+													  <div class="form-group row">
+															<div class="col-sm-10">
+															  <input type="text" class="form-control" id="branch" placeholder="Enter Branch" required>
+															</div>
+														  </div>
 										
 													  <div class="col-auto my-1">
-															<button type="submit" class="btn btn-primary" value="addsubmit">Submit</button>
+															<button type="submit" class="btn btn-primary" value="addsubmit" style="margin-left: auto;margin-right:auto">Submit</button>
 														  </div>
 													</div>
 												</form>
@@ -138,6 +149,8 @@
 					  </div>								  </li>
 			  </ul>
 			</div>
+			{%endif%}  
+
 			</nav>
 
 			</header>
@@ -182,7 +195,7 @@
         </div>
         <div class="col-md-4">
           <h5>Developed By</h5>
-          <p>G Murthy ,  R Uday<br>III-B.Tech CSE (2016-20)</p>
+          <p>G Murthy <br>III-B.Tech CSE (2016-20)</p>
          
         </div>
         
