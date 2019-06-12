@@ -29,7 +29,7 @@
 			  <span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNavDropdown" >
-					{%if session.logged_in%}
+					{% if session.logged_in %}
 
 			  <ul class="navbar-nav">
 				<li class="nav-item active"   >
@@ -58,14 +58,19 @@
 							<form>
 							<div class="modal-body">
 									<div class="custom-control custom-radio">
-											<input type="radio" id="addstudent" name="customRadio" class="custom-control-input">
+											<input type="radio" id="addstudent" name="customRadio" class="custom-control-input" required>
 											<label class="custom-control-label" for="addstudent" >Add Student</label>
 									</div>
 									<br>
 									<div class="custom-control custom-radio">
-											<input type="radio" id="deletestudent" name="customRadio" class="custom-control-input">
+											<input type="radio" id="deletestudent" name="customRadio" class="custom-control-input" required>
 											<label class="custom-control-label" for="deletestudent">Remove Student </label>
 										  </div>
+										  <br>
+										  <div class="custom-control custom-radio">
+												<input type="radio" id="view" name="customRadio" class="custom-control-input" required>
+												<label class="custom-control-label" for="view">View Students  </label>
+											  </div>
 										  <br>
 										  <div class="form-group row">
 												<div class="col-sm-10">
@@ -109,17 +114,65 @@
 						<div class="modal-dialog" role="document">
 						  <div class="modal-content">
 							<div class="modal-header">
-							  <h5 class="modal-title" id="exampleModalLabel">Upload Lab/Academic Marks</h5>
+							  <h5 class="modal-title" id="exampleModalLabel">Upload/Download Marks</h5>
 							  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							  </button>
 							</div>
-							<div class="modal-body">
+							<form>
+									<div class="modal-body">
+											<div class="custom-control custom-radio">
+													<input type="radio" id="upload" name="customRadio" class="custom-control-input" required>
+													<label class="custom-control-label" for="upload" >Upload Marks</label>
+											</div>
+											<br>
+											<div class="custom-control custom-radio">
+													<input type="radio" id="download" name="customRadio" class="custom-control-input" required>
+													<label class="custom-control-label" for="download">Download Marks  </label>
+												  </div>
+												  <br>
+												  <div class="custom-control custom-radio">
+														<input type="radio" id="viewmarks" name="customRadio" class="custom-control-input" required>
+														<label class="custom-control-label" for="viewmarks">View Marks  </label>
+													  </div>
+												  <br> 
+												  <div> 
+												  <label class="my-1 " for="inlineFormCustomSelectPref">Semester</label>
+												  <select class="custom-select my-1 " id="inlineFormCustomSelectPref">
+													<option selected>Choose...</option>
+													<option value="1">1-1</option>
+													<option value="2">1-2</option>
+													<option value="3">2-1</option>
+													<option value="4">2-2</option>
+													<option value="5">3-1</option>
+													<option value="6">3-2</option>
+													<option value="7">4-1</option>
+													<option value="8">4-2</option>
+
+												  </select>
+												  </div>
+												  <br>
+												  <div class="form-group row">
+														<div class="col-sm-10">
+														  <input type="text" class="form-control" id="subname" placeholder="Enter Subject Name" required>
+														</div>
+													  </div>
+													  <div class="custom-control custom-radio">
+															<input type="radio" id="mid1" name="customRadio" class="custom-control-input" required>
+															<label class="custom-control-label" for="mid1" >Mid-I</label>
+													</div>
+													<br>
+													<div class="custom-control custom-radio">
+															<input type="radio" id="mid2" name="customRadio" class="custom-control-input" required>
+															<label class="custom-control-label" for="mid2">Mid-II</label>
+														  </div>
+														  <br>
+														  <div class="col-auto my-1">
+																<button type="submit" class="btn btn-primary" value="upsubmit" style="margin-left: auto;margin-right:auto">Submit</button>
+															  </div>
 							</div>
-							<div class="modal-footer">
-							  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-							  <button type="button" class="btn btn-primary">Save changes</button>
-							</div>
+							</form>
+
 						  </div>
 						</div>
 					  </div>							</li>
@@ -129,27 +182,11 @@
 					  </button>
 					  
 					  <!-- Modal -->
-					  <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-						<div class="modal-dialog" role="document">
-						  <div class="modal-content">
-							<div class="modal-header">
-							  <h5 class="modal-title" id="exampleModalLabel">Add/Delete Subjects</h5>
-							  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							  </button>
-							</div>
-							<div class="modal-body">
-							</div>
-							<div class="modal-footer">
-							  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-							  <button type="button" class="btn btn-primary">Save changes</button>
-							</div>
-						  </div>
-						</div>
-					  </div>								  </li>
+					  						  </li>
 			  </ul>
+			  {% endif %} 
+
 			</div>
-			{%endif%}  
 
 			</nav>
 
