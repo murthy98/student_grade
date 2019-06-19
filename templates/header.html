@@ -24,19 +24,20 @@
 		{% endif %} 
 	</div>
 	<nav class="navbar navbar-expand bg-dark">
-			<a class="navbar-brand" href="#" style="margin-left:200px"></a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-			  <span class="navbar-toggler-icon"></span>
-			</button>
+			<a class="navbar-brand" href="#" style="margin-left:100px"></a>
+			
 			<div class="collapse navbar-collapse" id="navbarNavDropdown" >
-					{% if session.logged_in %}
 
 			  <ul class="navbar-nav">
 				<li class="nav-item active"   >
 <!-- Button trigger modal -->
-<button type="button" class="btn ">
+{% if session.logged_in %}
+
+<form action='{{url_for("initial")}}' method='POST'>
+<button type="submit" class="btn ">
 	&nbsp&nbsp&nbsp&nbsp&nbspHome&nbsp&nbsp&nbsp&nbsp&nbsp
   </button>
+</form>
   
   
 				</li>
@@ -55,44 +56,45 @@
 								<span aria-hidden="true">&times;</span>
 							  </button>
 							</div>
-							<form>
+							<form action="{{ url_for('addstudent') }}" method="POST">
 							<div class="modal-body">
 									<div class="custom-control custom-radio">
-											<input type="radio" id="addstudent" name="customRadio" class="custom-control-input" required>
+											<input type="radio" id="addstudent" value='addstudent' name="customRadio" class="custom-control-input" required>
 											<label class="custom-control-label" for="addstudent" >Add Student</label>
 									</div>
 									<br>
 									<div class="custom-control custom-radio">
-											<input type="radio" id="deletestudent" name="customRadio" class="custom-control-input" required>
+											<input type="radio" id="deletestudent" value='deletestudent'name="customRadio" class="custom-control-input" required>
 											<label class="custom-control-label" for="deletestudent">Remove Student </label>
 										  </div>
 										  <br>
 										  <div class="custom-control custom-radio">
-												<input type="radio" id="view" name="customRadio" class="custom-control-input" required>
-												<label class="custom-control-label" for="view">View Students  </label>
-											  </div>
+											<input type="radio" id="viewstudent" value='viewstudent' name="customRadio" class="custom-control-input" required>
+											<label class="custom-control-label" for="viewstudent" >View Students</label><br>
+											<small style="color: red">student details willbe fetched based on academic year and branch</small>
+									</div>
 										  <br>
 										  <div class="form-group row">
 												<div class="col-sm-10">
-												  <input type="text" class="form-control" id="name" placeholder="Enter Name..."required>
+												  <input type="text" class="form-control" name="name" placeholder="Enter Name...">
 												</div>
 											  </div>
 											  <br>
 											  <div class="form-group row">
 													<div class="col-sm-10">
-													  <input type="text" class="form-control" id="roll" placeholder="Enter Regd No..."required>
+													  <input type="text" class="form-control" name="roll" placeholder="Enter Regd No...">
 													</div>
 												  </div>
 												  <br>
 												  <div class="form-group row">
 														<div class="col-sm-10">
-														  <input type="text" class="form-control" id="acyear" placeholder="Enter Academic year like 2016-20.." required>
+														  <input type="text" class="form-control" name="acyear" placeholder="Enter Academic year like 2016-20.." required>
 														</div>
 													  </div>
 													  <br>
 													  <div class="form-group row">
 															<div class="col-sm-10">
-															  <input type="text" class="form-control" id="branch" placeholder="Enter Branch" required>
+															  <input type="text" class="form-control" name="branch" placeholder="Enter Branch" required>
 															</div>
 														  </div>
 										
@@ -119,26 +121,27 @@
 								<span aria-hidden="true">&times;</span>
 							  </button>
 							</div>
-							<form>
+							<form action="{{ url_for('marks') }}" method='POST'>
 									<div class="modal-body">
 											<div class="custom-control custom-radio">
-													<input type="radio" id="upload" name="customRadio" class="custom-control-input" required>
+													<input type="radio" id="upload" value='uploadmarks' name="customRadio2" class="custom-control-input" required>
 													<label class="custom-control-label" for="upload" >Upload Marks</label>
 											</div>
 											<br>
-											<div class="custom-control custom-radio">
-													<input type="radio" id="download" name="customRadio" class="custom-control-input" required>
-													<label class="custom-control-label" for="download">Download Marks  </label>
-												  </div>
-												  <br>
-												  <div class="custom-control custom-radio">
-														<input type="radio" id="viewmarks" name="customRadio" class="custom-control-input" required>
-														<label class="custom-control-label" for="viewmarks">View Marks  </label>
-													  </div>
+												<div class="custom-control custom-radio">
+														<input type="radio" id="modify" value='modifymarks' name="customRadio2" class="custom-control-input" required>
+														<label class="custom-control-label" for="modify" >Modify Marks</label>
+												</div>
+											<br>
+											
+													<div class="custom-control custom-radio">
+															<input type="radio" id="viewmarks" value='viewmarks' name="customRadio2" class="custom-control-input" required>
+															<label class="custom-control-label" for="viewmarks" >View Marks</label>
+													</div>
 												  <br> 
 												  <div> 
 												  <label class="my-1 " for="inlineFormCustomSelectPref">Semester</label>
-												  <select class="custom-select my-1 " id="inlineFormCustomSelectPref">
+												  <select class="custom-select my-1 " id="inlineFormCustomSelectPref" name='sem'>
 													<option selected>Choose...</option>
 													<option value="1">1-1</option>
 													<option value="2">1-2</option>
@@ -154,21 +157,41 @@
 												  <br>
 												  <div class="form-group row">
 														<div class="col-sm-10">
-														  <input type="text" class="form-control" id="subname" placeholder="Enter Subject Name" required>
+																<small style="color: green">The subject name must be same as stored subject name</small>
+																<br>
+														  <input type="text" class="form-control" name="subname" placeholder="Enter Subject Name" required>
 														</div>
 													  </div>
 													  <div class="custom-control custom-radio">
-															<input type="radio" id="mid1" name="customRadio" class="custom-control-input" required>
+															<input type="radio" id="mid1" name="customRadio3" value='mid1' class="custom-control-input" required>
 															<label class="custom-control-label" for="mid1" >Mid-I</label>
 													</div>
 													<br>
 													<div class="custom-control custom-radio">
-															<input type="radio" id="mid2" name="customRadio" class="custom-control-input" required>
+															<input type="radio" id="mid2" name="customRadio3" value='mid2'class="custom-control-input" required>
 															<label class="custom-control-label" for="mid2">Mid-II</label>
 														  </div>
 														  <br>
+														  <div class="form-group row">
+															<div class="col-sm-10">
+															  <input type="text" class="form-control" name="roll" placeholder="Enter Regd No">
+															</div>
+														  </div>
+														  <br>
+														  <div class="form-group row">
+																<div class="col-sm-10">
+																  <input type="text" class="form-control" name="acyear" placeholder="Enter Academic year like 2016-20.." required>
+																</div>
+															  </div>
+															  <br>
+															  <div class="form-group row">
+																<div class="col-sm-10">
+																  <input type="text" class="form-control" name="branch" placeholder="Enter Branch" required>
+																</div>
+															  </div>
+															  <br>
 														  <div class="col-auto my-1">
-																<button type="submit" class="btn btn-primary" value="upsubmit" style="margin-left: auto;margin-right:auto">Submit</button>
+																<button type="submit" class="btn btn-primary" value="upsubmit" >Submit</button>
 															  </div>
 							</div>
 							</form>
@@ -176,15 +199,76 @@
 						  </div>
 						</div>
 					  </div>							</li>
-				<li class="nav-item"   >
-					<button type="button" class="btn " data-toggle="modal" data-target="#exampleModal2" style="margin-left:100px;margin-right: auto;">
-						&nbsp&nbsp&nbsp&nbsp&nbsp	Subjects&nbsp&nbsp&nbsp&nbsp&nbsp
-					  </button>
-					  
-					  <!-- Modal -->
-					  						  </li>
+					  <li class="nav-item"   >
+						<button type="button" class="btn " data-toggle="modal" data-target="#exampleModal2" style="margin-left:100px;margin-right: auto;">
+							&nbsp&nbsp&nbsp&nbsp&nbsp	Subjects&nbsp&nbsp&nbsp&nbsp&nbsp
+						  </button>
+						  
+						  <!-- Modal --><div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+							  <div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Add/Delete Subjects</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								  <span aria-hidden="true">&times;</span>
+								</button>
+							  </div>
+							  <form action="{{ url_for('subject') }}" method="POST">
+									  <div class="modal-body">
+											  <div class="custom-control custom-radio">
+													  <input type="radio" id="addsub"value='addsubj' name="customRadio1" class="custom-control-input" required>
+													  <label class="custom-control-label" for="addsub" >Add Subject</label>
+											  </div>
+											  <br>
+											  <div class="custom-control custom-radio">
+													  <input type="radio" id="delsub" name="customRadio1" value='delsubj'class="custom-control-input" required>
+													  
+													 <label class="custom-control-label" for="delsub">Delete subject </label><br>
+													 <small style="color: red">All the details (student marks) of the subject will be removed</small>
+
+													</div>
+													<div class="custom-control custom-radio">
+														<input type="radio" id="viewsubject" name="customRadio1" value='viewsubj' class="custom-control-input" required>
+														<label class="custom-control-label" for="viewsubject">View Subjects  </label>
+													  </div>
+													<br> 
+													<div> 
+													<label class="my-1 " for="inlineFormCustomSelectPref" >Semester</label>
+													<select class="custom-select my-1 " id="inlineFormCustomSelectPref" name='sem'>
+													  <option selected>Choose...</option>
+													  <option value="1">1-1</option>
+													  <option value="2">1-2</option>
+													  <option value="3">2-1</option>
+													  <option value="4">2-2</option>
+													  <option value="5">3-1</option>
+													  <option value="6">3-2</option>
+													  <option value="7">4-1</option>
+													  <option value="8">4-2</option>
+  
+													</select>
+													</div>
+													<br>
+													<div class="form-group row">
+														  <div class="col-sm-10">
+
+															<input type="text" class="form-control" name='subname' placeholder="Enter Subject Name">
+														  </div>
+														</div>
+														
+															<br>
+															<div class="col-auto my-1">
+																  <button type="submit" class="btn btn-primary" value="subsubmit" style="margin-left: auto;margin-right:auto">Submit</button>
+																</div>
+							  </div>
+							  </form>
+							  </div>
+							  </div>
+							  </div>
+							  </li>
+  
+					  		{% endif %} 
+
 			  </ul>
-			  {% endif %} 
 
 			</div>
 

@@ -1,0 +1,32 @@
+{% extends "header.html" %}
+{% block body %}
+<form action='{{ url_for("upload")}}' method="POST">
+ <br>
+ <h3 align='center'>Upload Marks</h3>
+ <br>
+{% for row in data[2:] %}
+<table align='center'  cellpadding="10" cellspacing="5">
+
+  
+       
+        {% for d in row %}
+        <tr>
+             <td> <div class="form-group mb-2">
+          <input type="text" readonly class="form-control-plaintext" id="staticroll" value= {{ d[0] }}>
+        </div></td>  
+        <td>
+        <div class="form-group mx-sm-3 mb-2">
+          <input type="text" class="form-control" name= {{ d[0] }} placeholder="Enter Marks">
+
+        </div>
+    </td>
+        </tr>
+        {% endfor %}
+        </table>
+{% endfor %}
+<br>
+<button style="margin-left:400px" type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+
+{% endblock %}
