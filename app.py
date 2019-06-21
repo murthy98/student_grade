@@ -181,7 +181,7 @@ def addstudent():
                 c,conn=connection()
                 roll=request.form['roll']
                 try:
-                    c.execute("DELETE FROM student WHERE roll = %s",(roll))
+                    c.execute("DELETE FROM student WHERE roll = ('%s')"%(roll))
                     conn.commit()
                     conn.close()
                     gc.collect()
