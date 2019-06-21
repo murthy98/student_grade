@@ -141,7 +141,7 @@ def user():
                 return render_template("home.html",type= session['username'])
 
     except Exception as e:
-       flash(e)
+       flash('Invalid Credentials')
     return render_template("home.html",type= session['username'])
 
 @app.route('/addstudent',methods=['GET','POST'])
