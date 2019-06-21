@@ -5,6 +5,9 @@ from passlib.hash import sha256_crypt
 import gc
 import flask_excel as excel
 from flask_socketio import SocketIO, emit
+import os
+from flask import send_from_directory
+
 global down
 down=False
 app = Flask(__name__)
@@ -25,7 +28,7 @@ def send_mail(email):
 	try:
         
 		msg = Message("Forgot Password",sender="bvcec.marks@gmail.com",recipients=[str(email)])
-		msg.body = "Please click the below link to change your password\n\n http://studentgradebvc.herokuapp.com/pwchange"
+		msg.body = "Please click the below link to change your password\n\n http://studentgradebvc.herokuapp.com/pwchange\n\nRegards\nBVC Odalarevu"
 		mail.send(msg)
 		return 'Mail sent!'
 	except Exception as e:
