@@ -54,7 +54,7 @@ def passchange():
                 conn.close()
                 gc.collect()
                 flash('Please login')
-                return render_template("login.html",type=type)
+                return render_template("login.html")
     except Exception as e:
         flash('Invalid Credentials')
         return render_template("login.html")
@@ -80,14 +80,13 @@ def login():
                
                 data = c.fetchone()
                 if sha256_crypt.verify(request.form['password'],data[1] ):
-                    type=data[2]
                     c.close()
                     session['logged_in'] = True
-                    session['username'] = request.form['id']
+                    session['username'] = data[2]
                     conn.commit()
                     conn.close()
                     gc.collect()
-                    return render_template("home.html",type=type)
+                    return render_template("home.html",type= session['username'])
     except Exception as e:
         flash('Invalid Credentials')
         return render_template("login.html")
@@ -131,19 +130,19 @@ def user():
                 conn.close()
                 gc.collect()
                 flash('Succeccfully added new user')
-                return render_template("home.html",type=type)
+                return render_template("home.html",type= session['username'])
             if(cond=='deluser'):
                 c,conn=connection()
-                c.execute("DELETE FROM users WHERE id=%s",(id))
+                c.execute("DELETE FROM users WHERE id=('%s')"%id)
                 conn.commit()
                 conn.close()
                 gc.collect()
                 flash('Succeccfully deleted user')
-                return render_template("home.html",type=type)
+                return render_template("home.html",type= session['username'])
 
     except Exception as e:
-       flash("Invalid Credentials")
-    return render_template("home.html",type=type)
+       flash(e)
+    return render_template("home.html",type= session['username'])
 
 @app.route('/addstudent',methods=['GET','POST'])
 def addstudent():
