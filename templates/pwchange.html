@@ -1,24 +1,23 @@
 {% extends "header.html" %}
 {% block body %}
 
-<form action="{{ url_for('login') }}" method="POST">
+<form action="{{ url_for('passchange') }}" method="POST">
     <div class="container pt-3">
         <div class="row justify-content-sm-center">
           <div class="col-sm-6 col-md-4">
       
             <div class="card border-info text-center">
               <div class="card-header" style="background-color: lightgray; color: brown">
-<strong>LOGIN</strong></div>
+<strong>Password Change</strong></div>
 <img src="{{ url_for('static', filename='images.png') }}" style="max-height: 1000px;max-width:100px;margin-left: auto;margin-right: auto">
               <div class="card-body">
                   <input type="text" class="form-control mb-2" placeholder="Id" name='id' required autofocus>
                   <br>
                   <input type="password" class="form-control mb-2" placeholder="Password" name='password' required>
                   <br>
-                  <button class="btn btn-success" type="submit" name='submit'>Login</button>
+                  <button class="btn btn-success" type="submit" name='submit'>Submit</button>
                  <br>
                  <br>
-                  <a href="/forgot" class="float-right">forgot password?</a>
               </div>
             </div>
             </div>

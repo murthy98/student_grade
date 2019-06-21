@@ -265,7 +265,79 @@
 							  </div>
 							  </div>
 							  </li>
-  
+							  {% if(type=='admin') %}
+							  <li class="nav-item"   >
+								<button type="button" class="btn " data-toggle="modal" data-target="#exampleModal7" style="margin-left:80px;margin-right: auto;">
+									&nbsp&nbsp&nbsp&nbsp&nbsp	Users&nbsp&nbsp&nbsp&nbsp&nbsp
+								  </button>
+								  
+								  <!-- Modal --><div class="modal fade" id="exampleModal7" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+									  <div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">Add/Delete Users</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										  <span aria-hidden="true">&times;</span>
+										</button>
+									  </div>
+									  <form action="{{ url_for('user') }}" method="POST">
+											  <div class="modal-body">
+													  <div class="custom-control custom-radio">
+															  <input type="radio" id="adduser"value='adduser' name="customRadio1" class="custom-control-input" required>
+															  <label class="custom-control-label" for="adduser" >Add User</label>
+													  </div>
+													  <br>
+													  <div class="custom-control custom-radio">
+															  <input type="radio" id="deluser" name="customRadio1" value='deluser'class="custom-control-input" required>
+															  
+															 <label class="custom-control-label" for="deluser">Delete User </label><br>
+		
+															</div>
+															
+															<br> 
+															
+															<div class="form-group row">
+																  <div class="col-sm-10">
+		
+																	<input type="text" class="form-control" name='id' placeholder="Enter id" required>
+																  </div>
+																</div>
+																<br>
+																<div class="form-group row">
+																	<div class="col-sm-10">
+		  
+																	  <input type="text" class="form-control" name='password' placeholder="Enter password">
+																	</div>
+																  </div>
+																  <br>
+																  <div> 
+																	<label class="my-1 " for="inlineFormCustomSelectPref" >Type</label>
+																	<select class="custom-select my-1 " id="inlineFormCustomSelectPref" name='type'>
+																	  <option selected>Choose...</option>
+																	  <option value="admin">admin</option>
+																	  <option value="user">user</option>
+																	  
+				  
+																	</select>
+																	</div>
+																	<br>
+																	<div class="form-group row">
+																		<div class="col-sm-10">
+			  
+																		  <input type="email" class="form-control" name='email' placeholder="Enter Email">
+																		</div>
+																	  </div>
+																	<br>
+																	<div class="col-auto my-1">
+																		  <button type="submit" class="btn btn-primary" value="subsubmit" style="margin-left: auto;margin-right:auto">Submit</button>
+																		</div>
+									  </div>
+									  </form>
+									  </div>
+									  </div>
+									  </div>
+									  </li>
+							{% endif %}
 					  		{% endif %} 
 
 			  </ul>
@@ -316,7 +388,7 @@
         </div>
         <div class="col-md-4">
           <h5>Developed By</h5>
-          <p>G Murthy <br>III-B.Tech CSE (2016-20)</p>
+          <p>G Murthy<br>narayanamurthy.gidugu@gmail.com<br>IV-B.Tech CSE (2016-20)</p>
          
         </div>
         

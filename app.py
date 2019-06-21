@@ -1,5 +1,6 @@
 from flask import Flask, render_template, flash, request, url_for, redirect,session
 from dbconnection import connection
+from flask_mail import Mail, Message
 from passlib.hash import sha256_crypt
 import gc
 import flask_excel as excel
@@ -10,6 +11,25 @@ app = Flask(__name__)
 excel.init_excel(app)
 app.config['SECRET_KEY'] = 'redsfsfsfsfis'
 socketio = SocketIO(app)
+app.config.update(
+	DEBUG=True,
+	#EMAIL SETTINGS
+	MAIL_SERVER='smtp.googlemail.com',
+	MAIL_PORT=465,
+	MAIL_USE_SSL=True,
+	MAIL_USERNAME = 'bvcec.marks@gmail.com',
+	MAIL_PASSWORD = 'xgxhgwtreazidkkh'
+	)
+mail = Mail(app)
+def send_mail(email):
+	try:
+        
+		msg = Message("Forgot Password",sender="bvcec.marks@gmail.com",recipients=[str(email)])
+		msg.body = "Please click the below link to change your password\n\n http://studentgradebvc.herokuapp.com/pwchange"
+		mail.send(msg)
+		return 'Mail sent!'
+	except Exception as e:
+		return(str(e)) 
 @socketio.on('disconnect')
 def disconnect_user():
     session.clear()
@@ -17,6 +37,27 @@ def disconnect_user():
 def homepage():
     session.clear()
 
+    return render_template("login.html")
+@app.route("/pwchange")
+def pwchange():
+
+    return render_template("pwchange.html")
+@app.route('/passchange',methods=['GET','POST'])
+def passchange():
+    c,conn = connection()
+   
+    try:
+        
+        if request.method == "POST" :
+                c.execute("UPDATE users SET password=%s WHERE id=%s",(sha256_crypt.encrypt(request.form["password"]),request.form["id"]))
+                conn.commit()
+                conn.close()
+                gc.collect()
+                flash('Please login')
+                return render_template("login.html",type=type)
+    except Exception as e:
+        flash('Invalid Credentials')
+        return render_template("login.html")
     return render_template("login.html")
 @app.route("/logout")
 def logout():
@@ -34,26 +75,75 @@ def login():
     try:
         
         if request.method == "POST" :
-            print('req')
             if 'submit' in request.form:
-                print('sub')
                 c.execute("SELECT * FROM users WHERE id = ('%s')" %request.form["id"])
                
                 data = c.fetchone()
-                print(data)
                 if sha256_crypt.verify(request.form['password'],data[1] ):
+                    type=data[2]
                     c.close()
                     session['logged_in'] = True
                     session['username'] = request.form['id']
                     conn.commit()
                     conn.close()
                     gc.collect()
-                    return render_template("home.html")
+                    return render_template("home.html",type=type)
     except Exception as e:
-        print(e)
+        flash('Invalid Credentials')
         return render_template("login.html")
-    print('return')
     return render_template("login.html")
+@app.route('/forgot')
+def forgot():
+    return render_template('forgot.html')
+@app.route('/forgotpw',methods=['GET','POST'])
+def forgotpw():
+    try:
+        
+        if request.method == "POST" :
+            c,conn=connection()
+            c.execute("SELECT email FROM users WHERE id=('%s')" %request.form["id"])
+            data=c.fetchall()
+            x=send_mail(data[0][0])
+            if(x=='Mail sent!'):
+                flash("pleasecheck your mail")
+            else:
+                flash('please contact admin. we are unable to sent the mail!!.please provide correct mail.')
+            return render_template('login.html')
+
+    except Exception as e:
+        flash('please contact admin. we are unable to sent the mail!!.please provide correct mail.')
+        return render_template('login.html')
+    return render_template('forgot.html')
+@app.route('/user',methods=['GET','POST'])
+def user():
+    try:
+        
+        if request.method == "POST" :
+            cond=request.form["customRadio1"]
+            id=request.form["id"]
+            password=sha256_crypt.encrypt(request.form["password"])
+            typ=request.form.get('type')
+            email=request.form["email"]
+            if(cond=='adduser'):
+                c,conn=connection()
+                c.execute("INSERT INTO users VALUES (%s,%s, %s,%s)",(id,password,typ,email))
+                conn.commit()
+                conn.close()
+                gc.collect()
+                flash('Succeccfully added new user')
+                return render_template("home.html",type=type)
+            if(cond=='deluser'):
+                c,conn=connection()
+                c.execute("DELETE FROM users WHERE id=%s",(id))
+                conn.commit()
+                conn.close()
+                gc.collect()
+                flash('Succeccfully deleted user')
+                return render_template("home.html",type=type)
+
+    except Exception as e:
+       flash("Invalid Credentials")
+    return render_template("home.html",type=type)
 
 @app.route('/addstudent',methods=['GET','POST'])
 def addstudent():
@@ -70,6 +160,8 @@ def addstudent():
                 try:
                     c.execute("INSERT INTO student VALUES (%s,%s, %s,%s)",(roll,name,branch,year))
                     conn.commit()  
+                    conn.close()
+                    gc.collect()
                     flash(roll+' Added Successfully') 
                 except Exception:
                     flash('Invalid Credentials')    
@@ -92,6 +184,8 @@ def addstudent():
                 try:
                     c.execute("DELETE FROM student WHERE roll = %s",(roll))
                     conn.commit()
+                    conn.close()
+                    gc.collect()
                     flash(roll+' Deleted Successfully')
                 except Exception:
                     flash('Unable to find given details')
@@ -118,6 +212,8 @@ def subject():
                     c.execute(s)
 
                     conn.commit()
+                    conn.close()
+                    gc.collect()
                     flash('successfully added')
                 except Exception:
                     flash("Invalid credentials")
@@ -130,6 +226,8 @@ def subject():
                     s="ALTER TABLE student DROP "+str(subname)+str(sem)+'mid2'
                     c.execute(s)
                     conn.commit()
+                    conn.close()
+                    gc.collect()
                     flash("successfully removed")
                 except Exception:
                     flash('Invalid credentials')
@@ -143,12 +241,8 @@ def subject():
                     return render_template('view.html',data=data,down=down)
                 except Exception as e:
                     flash('Invalid Credentials')
-
-
-               
-
     except Exception as e:
-        flash(e)
+        flash('Invalid Credentials')
     return render_template("home.html")
    
 
@@ -184,7 +278,6 @@ def marks():
                 st.append(s)
                 roll=tuple([str(roll)])
                 st.append([roll])
-                print(st)
                 return render_template('marks.html',data=st)
            
             if(cond=='viewmarks'):
@@ -200,7 +293,7 @@ def marks():
                 down=True
                 return render_template('view.html',data=view,down=down)
     except Exception as e:
-        print(e)
+        flash("Invalid Credentials")
     return render_template('home.html')
 @app.route('/upload',methods=['GET','POST'])
 def upload():
@@ -214,11 +307,13 @@ def upload():
                     s='UPDATE student SET '+st[1].replace(' ','')+'=%s WHERE roll=%s'
                     c.execute(s,(marks,j[0]))
                     conn.commit()
+                    conn.close()
+                    gc.collect()
             flash('Successfully Uploaded')
         
         return render_template('home.html')
     except Exception as e:
-        flash(e)
+        flash('Invalid Credentials')
     return render_template('home.html')
 
 @app.route("/download", methods=['GET','POST'])
@@ -227,9 +322,7 @@ def download():
     with conn:
         with c:
             v=[]
-            print(view)
             v=[list(item) for item in view]           
-            print(v)
             return excel.make_response_from_array(v, "csv",file_name="mid_marks")
 if __name__ == "__main__":
     app.secret_key="dwqwfewfwqdqw"
