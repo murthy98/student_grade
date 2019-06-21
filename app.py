@@ -323,7 +323,16 @@ def download():
             v=[]
             v=[list(item) for item in view]           
             return excel.make_response_from_array(v, "csv",file_name="mid_marks")
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("error.html")
+@app.errorhandler(405)
+def page_not_found(e):
+    return render_template("error.html")
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template("error.html")
 if __name__ == "__main__":
     app.secret_key="dwqwfewfwqdqw"
     
-    app.run(debug=True)
+    app.run()
