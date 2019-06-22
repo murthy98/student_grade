@@ -1,0 +1,16 @@
+ conn=psycopg2.connect(database='d3aooc4t84kn0n' ,user='cdzgrdnckdgqjw' ,password='032ea1b1f89bb5b4d594fe27e510b10531ebaee8bd3d4f0947c8297bcecdca14' ,host='ec2-23-21-186-85.compute-1.amazonaws.com')
+
+
+
+c.execute("CREATE TABLE IF NOT EXISTS student(roll VARCHAR(50) NOT NULL UNIQUE,name VARCHAR(50) NOT NULL,branch VARCHAR(50) NOT NULL,acyear VARCHAR(50) NOT NULL);")
+
+c.execute("CREATE TABLE IF NOT EXISTS user(id VARCHAR(50) NOT NULL UNIQUE,password VARCHAR(50) NOT NULL,type VARCHAR(50) NOT NULL);")
+
+c.execute("INSERT INTO users VALUES (%s,%s, %s)",('12345','$5$rounds=535000$QTKRAlRCWjE6Pl5n$Uca/3YNNpaw/Le.KOmxMDQdRhFaV16aY8yO0kjvYq5A','admin');)
+
+c.execute("CREATE TABLE IF NOT EXISTS subject(name VARCHAR(50) NOT NULL,sem VARCHAR(10) NOT NULL")
+
+SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'student'
+
+
+xgxhgwtreazidkkh
