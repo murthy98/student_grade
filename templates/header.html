@@ -5,7 +5,6 @@
 	<meta charset="utf-8">
 
 	<title>Student Grade</title>
-	<link rel="shortcut icon" href="{{ url_for('static', filename='login1.ico') }}">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -26,24 +25,22 @@
 		{% endif %} 
 	</div>
 	<nav class="navbar navbar-expand bg-dark">
-			<a class="navbar-brand" href="#" style="margin-left:100px"></a>
 			
 			<div class="collapse navbar-collapse" id="navbarNavDropdown" >
 
 			  <ul class="navbar-nav">
 				<li class="nav-item active"   >
 <!-- Button trigger modal -->
-{% if session.logged_in %}
 
-<form action='{{url_for("initial")}}' method='POST'>
-<button type="submit" class="btn ">
-	&nbsp&nbsp&nbsp&nbsp&nbspHome&nbsp&nbsp&nbsp&nbsp&nbsp
-  </button>
-</form>
-  
-  
-				</li>
-				<li class="nav-item"   >
+{% if session.logged_in %}
+<li class="nav-item"   >
+	<form action='{{url_for("initial")}}'>
+		<button type="submit" class="btn " style="margin-left:150px;margin-right: auto;">
+			&nbsp&nbsp&nbsp&nbsp&nbspHome&nbsp&nbsp&nbsp&nbsp&nbsp
+		  </button>
+		</form>
+		</li>
+			  				<li class="nav-item"   >
 					<button type="button" class="btn " data-toggle="modal" data-target="#exampleModal" style="margin-left:100px;margin-right: auto;">
 						&nbsp&nbsp&nbsp&nbsp&nbspStudent&nbsp&nbsp&nbsp&nbsp&nbsp
 					  </button>
@@ -157,21 +154,15 @@
 												  </select>
 												  </div>
 												  <br>
-												  <div class="form-group row">
-														<div class="col-sm-10">
-																<small style="color: green">The subject name must be same as stored subject name</small>
-																<br>
-														  <input type="text" class="form-control" name="subname" placeholder="Enter Subject Name" required>
-														</div>
-													  </div>
+												 
 													  <div class="custom-control custom-radio">
-															<input type="radio" id="mid1" name="customRadio3" value='mid1' class="custom-control-input" required>
-															<label class="custom-control-label" for="mid1" >Mid-I</label>
+															<input type="radio" id="mid1" name="customRadio3" value='1' class="custom-control-input" required>
+															<label class="custom-control-label" for="mid1" >Mid-I or Internal</label>
 													</div>
 													<br>
 													<div class="custom-control custom-radio">
-															<input type="radio" id="mid2" name="customRadio3" value='mid2'class="custom-control-input" required>
-															<label class="custom-control-label" for="mid2">Mid-II</label>
+															<input type="radio" id="mid2" name="customRadio3" value='2'class="custom-control-input" required>
+															<label class="custom-control-label" for="mid2">Mid-II or External</label>
 														  </div>
 														  <br>
 														  <div class="form-group row">
@@ -218,7 +209,9 @@
 							  <form action="{{ url_for('subject') }}" method="POST">
 									  <div class="modal-body">
 											  <div class="custom-control custom-radio">
-													  <input type="radio" id="addsub"value='addsubj' name="customRadio1" class="custom-control-input" required>
+													<small style="color: green">If subject name is lab please postfix it with 'lab'</small>
+													<br>
+												<input type="radio" id="addsub"value='addsubj' name="customRadio1" class="custom-control-input" required>
 													  <label class="custom-control-label" for="addsub" >Add Subject</label>
 											  </div>
 											  <br>
@@ -347,10 +340,9 @@
 			</div>
 
 			</nav>
-
 			</header>
 <body >
- 
+	
 	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
