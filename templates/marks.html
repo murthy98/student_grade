@@ -9,19 +9,7 @@
   <br>
   <table align='center'  cellpadding="10" cellspacing="5">
 
-  <div>
-
-  <td> <label class="my-1 col-sm-5" for="inlineFormCustomSelectPref">Subject</label></td> 
-   <td> <select class="custom-select my-1 " id="inlineFormCustomSelectPref" name='sub'>
-    <option selected>Choose...</option>
-    {% for i in sub %}
-
-    <option value={{i[0]}}>{{i[0]}}</option>
-    {% endfor %}
-
-    </select></td>
-    </div>
-  <br>
+  
   {% for row in data[2:] %}
 
     

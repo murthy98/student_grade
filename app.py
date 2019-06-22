@@ -5,10 +5,13 @@ from passlib.hash import sha256_crypt
 import gc
 import flask_excel as excel
 from flask_socketio import SocketIO, emit
-import os
-from flask import send_from_directory
-
+import socket
+import dns.resolver
+import smtplib
+import re
 global down
+global subj
+global yea
 down=False
 app = Flask(__name__)
 excel.init_excel(app)
@@ -21,18 +24,53 @@ app.config.update(
 	MAIL_USERNAME = 'bvcec.marks@gmail.com',
 	MAIL_PASSWORD = 'xgxhgwtreazidkkh'
 	)
+c,conn=connection()
+c.execute("SELECT DISTINCT acyear FROM student")
+yea=c.fetchall()
+c.execute("SELECT name FROM subject")
+subj=c.fetchall()
+conn.close()
 socketio = SocketIO(app)
 @socketio.on('disconnect')
 def disconnect_user():
     session.clear()
 mail = Mail(app)
+def mailverify(email):
+   
+    try:
+        addressToVerify =email
+        match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', addressToVerify)
+
+        if match == None:
+            return 'syntax not valid'
+        m=email.split('@')[1]
+        m=str(m)
+        records = dns.resolver.query(m, 'MX')
+        mxRecord = records[0].exchange
+        mxRecord = str(mxRecord)
+        host = socket.gethostname()
+        server = smtplib.SMTP()
+        server.set_debuglevel(0)
+        server.connect(mxRecord)
+        server.helo(host)
+        server.mail(email)
+        code, message = server.rcpt(str(addressToVerify))
+        server.quit()
+        if code == 250:
+            return 1
+        else:
+            return 0
+    except Exception :
+        
+        return 0
 def send_mail(email):
 	try:
-        
-		msg = Message("Forgot Password",sender="bvcec.marks@gmail.com",recipients=[str(email)])
-		msg.body = "Please click the below link to change your password\n\n http://studentgradebvc.herokuapp.com/pwchange\n\nRegards\nBVC Odalarevu"
-		mail.send(msg)
-		return 'Mail sent!'
+            x=mailverify(email)
+            if(x==1):
+                msg = Message("Forgot Password",sender="bvcec.marks@gmail.com",recipients=[str(email)])
+                msg.body = "Please click the below link to change your password\n\n http://studentgradebvc.herokuapp.com/pwchange\n\nRegards\nBVC Odalarevu"
+                mail.send(msg)
+                return 'Mail sent!'
 	except Exception as e:
 		return(str(e)) 
 @app.route("/")
@@ -41,7 +79,7 @@ def homepage():
     return render_template("login.html")
 @app.route("/initial")
 def initial():
-    return render_template("home.html",type=session['type'])
+    return render_template("home.html",type=session['type'],year=yea,subj=subj)
 @app.route("/pwchange")
 def pwchange():
     return render_template("pwchange.html")
@@ -84,10 +122,12 @@ def login():
                     conn.commit()
                     conn.close()
                     gc.collect()
-                    return render_template("home.html",type=session['type'])
+                    return render_template("home.html",type=session['type'],year=yea,subj=subj)
     except Exception as e:
         flash('Invalid Credentials')
+        session.clear()
         return render_template("login.html")
+    session.clear()
     return render_template("login.html")
 @app.route('/forgot')
 def forgot():
@@ -123,34 +163,38 @@ def user():
             email=request.form["email"]
             if(cond=='adduser'):
                 c,conn=connection()
-                c.execute("INSERT INTO users VALUES (%s,%s, %s,%s)",(id,password,typ,email))
-                conn.commit()
-                conn.close()
-                flash('Succeccfully added new user')
-                return render_template("home.html",type=session['type'])
+                x=mailverify(email)
+                if(x==1):
+                    c.execute("INSERT INTO users VALUES (%s,%s, %s,%s)",(id,password,typ,email))
+                    conn.commit()
+                    conn.close()
+                    flash('Succeccfully added new user')
+                    return render_template("home.html",type=session['type'],year=yea,subj=subj)
+                else:
+                    flash('Invalid email')
             if(cond=='deluser'):
                 c,conn=connection()
                 c.execute("DELETE FROM users WHERE id=('%s')"%id)
                 conn.commit()
                 conn.close()
                 flash('Succeccfully deleted user')
-                return render_template("home.html",type=session['type'])
+                return render_template("home.html",type=session['type'],year=yea,subj=subj)
 
     except Exception as e:
        flash('Invalid Credentials')
-    return render_template("home.html",type=session['type'])
+    return render_template("home.html",type=session['type'],year=yea,subj=subj)
 
 @app.route('/addstudent',methods=['GET','POST'])
 def addstudent():
     try:
-        
+       
         if request.method == "POST" :
             cond=request.form["customRadio"]
             if(cond=='addstudent'):
                 name=request.form['name']
                 roll=request.form['roll']
-                year=request.form['acyear']
-                branch=request.form['branch']
+                year=request.form.get('acyear')
+                branch=request.form.get('branch')
                 c,conn=connection()
                 try:
                     c.execute("INSERT INTO student VALUES (%s,%s, %s,%s)",(roll,name,branch,year))
@@ -160,20 +204,20 @@ def addstudent():
                     flash(roll+' Added Successfully') 
                 except Exception:
                     flash('Invalid Credentials')    
-            elif(cond=='viewstudent'):
+            if(cond=='viewstudent'):
                 c,conn=connection()
-                year=request.form['acyear']
-                branch=request.form['branch']
+                year=request.form.get('acyear')
+                branch=request.form.get('branch')
                 try:
                     c.execute("SELECT roll,name,branch,acyear FROM student WHERE acyear=%s AND branch=%s",(year,branch,))
                     data=c.fetchall()
                     if data:
                         colname=[desc[0] for desc in c.description]
                         data.insert(0,colname)
-                    return render_template('view.html',data=data,down=down,type=session['type'])
+                    return render_template('view.html',data=data,down=down,type=session['type'],year=yea,subj=subj)
                 except Exception as e:
                     flash('Invalid Credentials')    
-            else:
+            if(cond=='deletestudent'):
                 c,conn=connection()
                 roll=request.form['roll']
                 try:
@@ -185,11 +229,12 @@ def addstudent():
                     flash('Unable to find given details')
     except Exception as e:
         flash('Unable to connect Please try again')
-    return render_template('home.html',type=session['type'])
+    return render_template('home.html',type=session['type'],year=yea,subj=subj)
 @app.route('/subject',methods=['GET','POST'])
 def subject():
     try:
-        
+        global subj
+        subj=[]
         if request.method == "POST" :
             c,conn=connection()
             cond=request.form["customRadio1"]
@@ -204,6 +249,8 @@ def subject():
                     s="ALTER TABLE student ADD "+str(subname)+str(sem)+"2 INTEGER"
                     c.execute(s)
                     conn.commit()
+                    c.execute("SELECT name FROM subject")
+                    subj=c.fetchall()
                     conn.close()
                     flash('successfully added')
                 except Exception:
@@ -217,6 +264,8 @@ def subject():
                     s="ALTER TABLE student DROP "+str(subname)+str(sem)+'2'
                     c.execute(s)
                     conn.commit()
+                    c.execute("SELECT name FROM subject")
+                    subj=c.fetchall()
                     conn.close()
                     flash("successfully removed")
                 except Exception:
@@ -228,13 +277,13 @@ def subject():
                     if data:
                         colname=[desc[0] for desc in c.description]
                         data.insert(0,colname)
-                    return render_template('view.html',data=data,down=down,type=session['type'])
+                    return render_template('view.html',data=data,down=down,type=session['type'],year=yea,subj=subj)
                 except Exception as e:
                     flash('Invalid Credentials')
     except Exception as e:
         flash('Invalid Credentials')
 
-    return render_template("home.html",type=session['type'])
+    return render_template("home.html",type=session['type'],year=yea,subj=subj)
    
 
 @app.route('/marks',methods=['GET','POST'])
@@ -246,40 +295,41 @@ def marks():
             mid=request.form["customRadio3"]
             c,conn=connection()
             cond=request.form["customRadio2"]
-            year=request.form['acyear'] 
-            branch=request.form['branch']
+            year=request.form.get('acyear') 
+            branch=request.form.get('branch')
+            subname=request.form.get('subname')
             if(cond=='uploadmarks'):
                 try:
                     st=[]
                     s=''
                     
-                    s+=str(sem)+str(mid)
+                    s+=str(subname)+str(sem)+str(mid)
                    
-                    c.execute("SELECT name from subject WHERE sem=('%s')"%(sem))
-                    sub=c.fetchall()
+                    #c.execute("SELECT name from subject WHERE sem=('%s')"%(sem))
+                    #sub=c.fetchall()
                     c.execute("SELECT roll FROM student WHERE acyear=%s AND branch=%s",(year,branch))
                     st.append(c.fetchall())
-                    if(len(st)<=1):
+                    if(len(st[0])<=1):
                         st=[]   
+                    
                     if st:
                         st.insert(0,year)
                         st.insert(1,s)
-                    return render_template('marks.html',data=st,type=session['type'],sub=sub)
+                    return render_template('marks.html',data=st,type=session['type'],year=yea,subj=subj)
                 except Exception as e:
                     flash('Invalid Credentials')
             if(cond=='modifymarks'):
                 st=[]
                 s=''
-                roll=request.form['roll']   
-                s+=str(subname)+' '+str(sem)+' '+str(mid)
+                roll=request.form['roll'] 
+                s+=str(subname)+str(sem)+str(mid)
                 roll=tuple([str(roll)])
                 st.append([roll])
-                if(len(st)<=1):
-                        st=[]   
+                 
                 if st:
                         st.insert(0,year)
                         st.insert(1,s)
-                return render_template('marks.html',data=st,type=session['type'])
+                return render_template('marks.html',data=st,type=session['type'],year=yea,subj=subj)
            
             if(cond=='viewmarks'):
                 global view
@@ -292,10 +342,10 @@ def marks():
                     colname=[desc[0] for desc in c.description]
                     view.insert(0,colname)
                 down=True
-                return render_template('view.html',data=view,down=down,type=session['type'])
+                return render_template('view.html',data=view,down=down,type=session['type'],year=yea,subj=subj)
     except Exception as e:
         flash("Invalid Credentials")
-    return render_template('home.html')
+    return render_template('home.html',year=yea,type=session['type'])
 @app.route('/upload',methods=['GET','POST'])
 def upload():
     try:
@@ -304,18 +354,18 @@ def upload():
         if request.method == "POST" :
             for i in st[2:]:
                 for j in i:
-                    sub=request.form.get('sub')
                     marks=request.form[j[0]]
-                    s='UPDATE student SET '+str(sub)+st[1].replace(' ','')+'=%s WHERE roll=%s'
+                    s='UPDATE student SET '+st[1].replace(' ','')+'=%s WHERE roll=%s'
+                    print('marks     ',marks,j[0])
                     c.execute(s,(marks,j[0]))
                     conn.commit()
-                    conn.close()
+            conn.close()
             flash('Successfully Uploaded')
         
-        return render_template('home.html',type=session['type'])
+        return render_template('home.html',type=session['type'],year=yea,subj=subj)
     except Exception as e:
         flash('Invalid Credentials')
-    return render_template('home.html',type=session['type'])
+    return render_template('home.html',type=session['type'],year=yea,subj=subj)
 
 @app.route("/download", methods=['GET','POST'])
 def download():
@@ -328,15 +378,15 @@ def download():
 @app.errorhandler(404)
 def page_not_found(e):
     flash('Page not Found')
-    return render_template('home.html',type=session['type'])
+    return render_template('home.html',type=session['type'],year=yea,subj=subj)
 @app.errorhandler(405)
 def page_not_found(e):
     flash('Page not Found')
-    return render_template('home.html',type=session['type'])
+    return render_template('home.html',type=session['type'],year=yea,subj=subj)
 @app.errorhandler(500)
 def page_not_found(e):
     flash('Page not Found')
-    return render_template('home.html',type=session['type'])
+    return render_template('home.html',type=session['type'],year=yea,subj=subj)
 if __name__ == "__main__":
     app.secret_key="dwqwfewfwqdqw"
     app.run(debug=True)

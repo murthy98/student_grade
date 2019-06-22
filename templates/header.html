@@ -8,20 +8,16 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="{{ url_for('static', filename='css/bootstrap-dropdownhover.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-		<link href="{{ url_for('static', filename='bvcicon.ico') }}" type="icon" rel="icon"  >
 		<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 		
-		<div><br></div>
 	<div >
 		<h3 align='center' , ><strong>BVC ENGINEERING COLLEGE</strong></h3>
 		<h6 align='center'><strong>AUTONOMOUS</strong></h6>
 		<h6 align='center'>Approved by AICTE, Permanently Affiliated to JNTU Kakinada, Accredited by NAAC with 'B++' Grade</h6>
-		<a href="/"><img style="max-width:100px; margin-top: -130px;margin-left:50px" src="{{ url_for('static', filename='logo1.png') }}"></a>
+		<img style="max-width:80px;margin-top:-100px;margin-left:50px" src="{{ url_for('static', filename='logo1.png') }}">
 		{% if session.logged_in %}
-
-		<button type="button" class="btn btn-success" style="margin-left:900px;margin-top:-200px"><a href="/logout" style="color:white">Logout</a></button>
+		<button type="submit" class="btn btn-success" style="margin-left:900px;margin-top:-100px"><a href='/logout'  style="color:white">Logout</a></button>
 		{% endif %} 
 	</div>
 	<nav class="navbar navbar-expand bg-dark">
@@ -85,17 +81,30 @@
 													</div>
 												  </div>
 												  <br>
-												  <div class="form-group row">
-														<div class="col-sm-10">
-														  <input type="text" class="form-control" name="acyear" placeholder="Enter Academic year like 2016-20.." required>
+												  <div> 
+														<label class="my-1 " for="inlineFormCustomSelectPref">Academic Year</label>
+														<select class="custom-select my-1 " id="inlineFormCustomSelectPref" name='acyear'>
+														  <option selected>Choose...</option>
+														  {% for i in year%}
+														  <option value={{i[0]}}>{{i[0]}}</option>
+														 
+															{% endfor %}
+														</select>
 														</div>
-													  </div>
 													  <br>
-													  <div class="form-group row">
-															<div class="col-sm-10">
-															  <input type="text" class="form-control" name="branch" placeholder="Enter Branch" required>
+													  <div> 
+															<label class="my-1 " for="inlineFormCustomSelectPref">Branch</label>
+															<select class="custom-select my-1 " id="inlineFormCustomSelectPref" name='branch'>
+															  <option selected>Choose...</option>
+															  <option value="cse">Computer Science and Engineering</option>
+															  <option value="ece">Electronics and Communication Engineering</option>
+															  <option value="eee">Electrical & Electronics Engineering</option>
+															  <option value="mech">Mechanical Engineering</option>
+															  <option value="civil">Civil Engineering</option>
+															
+		  
+															</select>
 															</div>
-														  </div>
 										
 													  <div class="col-auto my-1">
 															<button type="submit" class="btn btn-primary" value="addsubmit" style="margin-left: auto;margin-right:auto">Submit</button>
@@ -126,8 +135,8 @@
 													<input type="radio" id="upload" value='uploadmarks' name="customRadio2" class="custom-control-input" required>
 													<label class="custom-control-label" for="upload" >Upload Marks</label>
 											</div>
-											<br>
 												<div class="custom-control custom-radio">
+													<samll style="color: green">Modify Marks is used to modify marks of particular student</samll>
 														<input type="radio" id="modify" value='modifymarks' name="customRadio2" class="custom-control-input" required>
 														<label class="custom-control-label" for="modify" >Modify Marks</label>
 												</div>
@@ -157,31 +166,55 @@
 												 
 													  <div class="custom-control custom-radio">
 															<input type="radio" id="mid1" name="customRadio3" value='1' class="custom-control-input" required>
-															<label class="custom-control-label" for="mid1" >Mid-I or Internal</label>
+															<label class="custom-control-label" for="mid1" >Mid-I or Internal Lab</label>
 													</div>
 													<br>
 													<div class="custom-control custom-radio">
 															<input type="radio" id="mid2" name="customRadio3" value='2'class="custom-control-input" required>
-															<label class="custom-control-label" for="mid2">Mid-II or External</label>
+															<label class="custom-control-label" for="mid2">Mid-II or External Lab</label>
 														  </div>
-														  <br>
 														  <div class="form-group row">
 															<div class="col-sm-10">
+																<small style="color: green">Regd.No must be compulsory while modifying marks</small>
 															  <input type="text" class="form-control" name="roll" placeholder="Enter Regd No">
 															</div>
 														  </div>
 														  <br>
-														  <div class="form-group row">
-																<div class="col-sm-10">
-																  <input type="text" class="form-control" name="acyear" placeholder="Enter Academic year like 2016-20.." required>
+														  <div> 
+																<label class="my-1 " for="inlineFormCustomSelectPref">Subject Name</label>
+																<select class="custom-select my-1 " id="inlineFormCustomSelectPref" name='subname'>
+																  <option selected>Choose...</option>
+																  {% for i in subj%}
+																  <option value={{i[0]}}>{{i[0]}}</option>
+																 
+																	{% endfor %}
+																</select>
 																</div>
-															  </div>
+																<br>
+														  <div> 
+																<label class="my-1 " for="inlineFormCustomSelectPref">Academic Year</label>
+																<select class="custom-select my-1 " id="inlineFormCustomSelectPref" name='acyear'>
+																  <option selected>Choose...</option>
+																  {% for i in year%}
+																  <option value={{i[0]}}>{{i[0]}}</option>
+																 
+																	{% endfor %}
+																</select>
+																</div>
 															  <br>
-															  <div class="form-group row">
-																<div class="col-sm-10">
-																  <input type="text" class="form-control" name="branch" placeholder="Enter Branch" required>
-																</div>
-															  </div>
+															  <div> 
+																	<label class="my-1 " for="inlineFormCustomSelectPref">Branch</label>
+																	<select class="custom-select my-1 " id="inlineFormCustomSelectPref" name='branch'>
+																	  <option selected>Choose...</option>
+																	  <option value="cse">Computer Science and Engineering</option>
+																	  <option value="ece">Electronics and Communication Engineering</option>
+																	  <option value="eee">Electrical & Electronics Engineering</option>
+																	  <option value="mech">Mechanical Engineering</option>
+																	  <option value="civil">Civil Engineering</option>
+																	
+				  
+																	</select>
+																	</div>
 															  <br>
 														  <div class="col-auto my-1">
 																<button type="submit" class="btn btn-primary" value="upsubmit" >Submit</button>
@@ -281,8 +314,8 @@
 															  <input type="radio" id="adduser"value='adduser' name="customRadio1" class="custom-control-input" required>
 															  <label class="custom-control-label" for="adduser" >Add User</label>
 													  </div>
-													  <br>
 													  <div class="custom-control custom-radio">
+														  <small style="color: green">Id is enough to delete user</small><br>
 															  <input type="radio" id="deluser" name="customRadio1" value='deluser'class="custom-control-input" required>
 															  
 															 <label class="custom-control-label" for="deluser">Delete User </label><br>
