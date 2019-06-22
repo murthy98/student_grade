@@ -263,7 +263,7 @@ def marks():
                         st=[]   
                     if st:
                         st.insert(0,year)
-                        st.insert(1,year)
+                        st.insert(1,s)
                     return render_template('marks.html',data=st,type=session['type'],sub=sub)
                 except Exception as e:
                     flash('Invalid Credentials')
@@ -278,7 +278,7 @@ def marks():
                         st=[]   
                 if st:
                         st.insert(0,year)
-                        st.insert(1,year)
+                        st.insert(1,s)
                 return render_template('marks.html',data=st,type=session['type'])
            
             if(cond=='viewmarks'):
