@@ -195,7 +195,6 @@ def subject():
             cond=request.form["customRadio1"]
             subname=request.form['subname']
             sem=request.form.get('sem')
-
             if(cond=='addsubj'):
                 s=''
                 try:
@@ -204,13 +203,11 @@ def subject():
                     c.execute(s)
                     s="ALTER TABLE student ADD "+str(subname)+str(sem)+"2 INTEGER"
                     c.execute(s)
-
                     conn.commit()
                     conn.close()
                     flash('successfully added')
-                    return render_template('home.html',type=session['type'])
                 except Exception:
-                    flash("Invalid credentials")
+                    flash("Invalid credentials or subject name already exists")
             if(cond=='delsubj'):
                 s=''
                 try:
@@ -223,7 +220,7 @@ def subject():
                     conn.close()
                     flash("successfully removed")
                 except Exception:
-                    flash('Invalid credentials')
+                    flash('Invalid credentials or subject didnot exist')
             if(cond=='viewsubj'):
                 try:
                     c.execute("SELECT name,sem FROM subject WHERE sem=%s",(sem))
@@ -233,11 +230,11 @@ def subject():
                         data.insert(0,colname)
                     return render_template('view.html',data=data,down=down,type=session['type'])
                 except Exception as e:
-                    flash(e)
+                    flash('Invalid Credentials')
     except Exception as e:
         flash('Invalid Credentials')
 
-    return render_template("home.html")
+    return render_template("home.html",type=session['type'])
    
 
 @app.route('/marks',methods=['GET','POST'])
@@ -257,26 +254,31 @@ def marks():
                     s=''
                     
                     s+=str(sem)+str(mid)
-                    st.append(year)
-                    st.append(s)
+                   
                     c.execute("SELECT name from subject WHERE sem=('%s')"%(sem))
                     sub=c.fetchall()
                     c.execute("SELECT roll FROM student WHERE acyear=%s AND branch=%s",(year,branch))
-                    for i in sub:
-                        print(i[0])
-                    st.append(c.fetchall())   
+                    st.append(c.fetchall())
+                    if(len(st)<=1):
+                        st=[]   
+                    if st:
+                        st.insert(0,year)
+                        st.insert(1,year)
                     return render_template('marks.html',data=st,type=session['type'],sub=sub)
                 except Exception as e:
-                    flash(e)
+                    flash('Invalid Credentials')
             if(cond=='modifymarks'):
                 st=[]
                 s=''
                 roll=request.form['roll']   
                 s+=str(subname)+' '+str(sem)+' '+str(mid)
-                st.append(year)
-                st.append(s)
                 roll=tuple([str(roll)])
                 st.append([roll])
+                if(len(st)<=1):
+                        st=[]   
+                if st:
+                        st.insert(0,year)
+                        st.insert(1,year)
                 return render_template('marks.html',data=st,type=session['type'])
            
             if(cond=='viewmarks'):
@@ -299,15 +301,13 @@ def upload():
     try:
         c,conn=connection()
         s=''
-        print(st)
         if request.method == "POST" :
             for i in st[2:]:
                 for j in i:
+                    sub=request.form.get('sub')
                     marks=request.form[j[0]]
-                    s='UPDATE student SET '+st[1].replace(' ','')+'=%s WHERE roll=%s'
-                    print(j[0])
+                    s='UPDATE student SET '+str(sub)+st[1].replace(' ','')+'=%s WHERE roll=%s'
                     c.execute(s,(marks,j[0]))
-                    print('cpnn')
                     conn.commit()
                     conn.close()
             flash('Successfully Uploaded')
