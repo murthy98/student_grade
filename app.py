@@ -21,8 +21,8 @@ app.config.update(
 	MAIL_SERVER='smtp.googlemail.com',
 	MAIL_PORT=465,
 	MAIL_USE_SSL=True,
-	MAIL_USERNAME = 'bvcec.marks@gmail.com',
-	MAIL_PASSWORD = 'xgxhgwtreazidkkh'
+	MAIL_USERNAME = '',
+	MAIL_PASSWORD = ''
 	)
 c,conn=connection()
 c.execute("SELECT DISTINCT acyear FROM student")
